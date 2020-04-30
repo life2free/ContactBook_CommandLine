@@ -50,6 +50,14 @@ shimin = Contact(first_name='Shimin', last_name='Rao',
 shimin.save()
 
 
+class Condition:
+    def __init__(self, first_name, last_name, phone, company):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.phone = phone
+        self.company = company
+
+
 class Main:
     def __init__(self):
         self.title = "Welcome to Contact Book!"
@@ -61,7 +69,7 @@ class Main:
     def run(self):
         print("Please choice the options as below:")
         print(" 1. Get all contacts.")
-        print(" 2. Get a single contact.")
+        print(" 2. Get contacts by conditions.")
         print(" 3. Create a new contact.")
         print(" 4. Update a contact.")
         print(" 5. Delete a contact.")
@@ -69,7 +77,7 @@ class Main:
         print()
         try:
             choice = int(input("Please type the option number: "))
-            if(choice > 6):
+            if(choice < 1 or choice > 6):
                 self.try_again_with_invalid_input(self.run)
             else:
                 if(choice == 1):
@@ -77,6 +85,7 @@ class Main:
                     self.get_all_contacts()
                 if(choice == 2):
                     print("2")
+                    self.get_contacts()
                 if(choice == 3):
                     print("3")
                 if(choice == 4):
@@ -96,18 +105,22 @@ class Main:
         print(" 4. Exit the app.")
         try:
             choice = int(input("Please type the option number: "))
-            if(choice > 4):
+            if(choice < 1 or choice > 4):
                 self.try_again_with_invalid_input(self.get_all_contacts)
             else:
                 all_contacts = Contact.select()
                 if(choice == 1):
-                    for contact in all_contacts:
-                        self.print_name_in_list(contact)
+                    if(len(all_contacts) > 0):
+                        for contact in all_contacts:
+                            self.print_name_in_list(contact)
+                    else:
+                        print("No result")
                     self.back_to_main()
                 if(choice == 2):
-                    print("     Name            Phone           Company")
-                    for contact in all_contacts:
-                        self.print_detail_in_list(contact)
+                    if(len(all_contacts) > 0):
+                        self.print_contacts(all_contacts)
+                    else:
+                        print("No result")
                     self.back_to_main()
                 if(choice == 3):
                     print("3")
@@ -116,6 +129,44 @@ class Main:
                     print("Exit the app!")
         except ValueError as e:
             self.try_again_with_invalid_input(self.get_all_contacts)
+
+    def get_contacts(self):
+        print("Please choice the conditions as below:")
+        print(" 1. Get contacts by firstname,lastname,phone,company.")
+        print(" 2. Back to main options.")
+        print(" 3. Exit the app.")
+        try:
+            choice = int(input("Please type the option number: "))
+            if(choice < 1 or choice > 7):
+                self.try_again_with_invalid_input(
+                    self.get_contacts)
+            else:
+                if(choice == 1):
+                    first_name = input(
+                        "Enter first name (or just Press Enter):")
+                    last_name = input("Enter last name (or just Press Enter):")
+                    phone = input("Enter phone (or just Press Enter):")
+                    company = input("Enter company (or just Press Enter):")
+                    contacts = self.get_contacts_by_conditions(
+                        Condition(first_name, last_name, phone, company))
+                    if(len(contacts) > 0):
+                        self.print_contacts(contacts)
+                    else:
+                        print("No result")
+                    self.back_to_main()
+
+                if(choice == 2):
+                    print("2")
+                    self.back_to_main()
+                if(choice == 3):
+                    print("Exit the app!")
+        except ValueError as e:
+            self.try_again_with_invalid_input(self.get_contacts)
+
+    def get_contacts_by_conditions(self, condition):
+        contacts = Contact.select().where(Contact.first_name.contains(condition.first_name) & Contact.last_name.contains(
+            condition.last_name) & Contact.phone.contains(condition.phone) & Contact.company.contains(condition.company))
+        return contacts
 
     def try_again_with_invalid_input(self, func):
         input('Invalid input, Press Enter try again.')
@@ -126,6 +177,11 @@ class Main:
         input("Press Enter to back to main options.")
         print()
         self.run()
+
+    def print_contacts(self, contacts):
+        print("     Name            Phone           Company")
+        for contact in contacts:
+            self.print_detail_in_list(contact)
 
     def print_name_in_list(self, contact):
         print(f"    {contact.first_name} {contact.last_name}")
