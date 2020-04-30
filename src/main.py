@@ -51,7 +51,7 @@ shimin = Contact(first_name='Shimin', last_name='Rao',
 shimin.save()
 
 
-class Condition:
+class ContactObj:
     def __init__(self, first_name, last_name, phone, company):
         self.first_name = first_name
         self.last_name = last_name
@@ -92,6 +92,7 @@ class Main:
                     self.create_contact()
                 if(choice == 4):
                     print("4")
+                    self.update_contact()
                 if(choice == 5):
                     print("delete contact")
                     self.delete_contact()
@@ -153,7 +154,7 @@ class Main:
                     company = input(
                         "Enter company (or just Press Enter):").strip()
                     contacts = self.get_contacts_by_conditions(
-                        Condition(first_name, last_name, phone, company))
+                        ContactObj(first_name, last_name, phone, company))
                     if(len(contacts) > 0):
                         self.print_contacts(contacts)
                     else:
@@ -180,33 +181,33 @@ class Main:
         while(first_name.strip() == ""):
             print(
                 "First name is required! If don't want to add a new contact, input back.")
-            first_name = input("Enter first name (* required):")
-            if(first_name.strip() != "" and first_name.strip().lower() == "back"):
+            first_name = input("Enter first name (* required):").strip()
+            if(first_name != "" and first_name.lower() == "back"):
                 back_to_main = True
                 break
         if(back_to_main):
             self.run()
         else:
-            last_name = input("Enter last name (* required):")
-            while(last_name.strip() == ""):
+            last_name = input("Enter last name (* required):").strip()
+            while(last_name == ""):
                 print(
                     "Last name is required! If don't want to add a new contact, input back.")
-                last_name = input("Enter last name (* required):")
-                if(last_name.strip() != "" and last_name.strip().lower() == "back"):
+                last_name = input("Enter last name (* required):").strip()
+                if(last_name != "" and last_name.lower() == "back"):
                     back_to_main = True
                     break
             if(back_to_main):
                 self.run()
             else:
                 phone = input(
-                    "Enter phone (nine digits and first one is no-zero, or just Press Enter):")
-                if(phone.strip() != ""):
+                    "Enter phone (nine digits and first one is no-zero, or just Press Enter):").strip()
+                if(phone != ""):
                     while(not self.validate_phone_number(phone)):
                         print(
                             "The number is invalid! If don't want to add a new contact, input back.")
                         phone = input(
-                            "Enter phone (nine digits and first one is no-zero, or just Press Enter):")
-                        if(phone.strip() != "" and phone.strip().lower() == "back"):
+                            "Enter phone (nine digits and first one is no-zero, or just Press Enter):").strip()
+                        if(phone != "" and phone.lower() == "back"):
                             back_to_main = True
                             break
                 if(back_to_main):
@@ -220,9 +221,10 @@ class Main:
                     self.print_detail_info(contact)
                     self.back_to_main()
 
-    def delete_contact(self):
+    def update_contact(self):
+        print("Update contact")
         print(
-            "Please choice the conditions as below to get the contacts you want to delete:")
+            "Please choice the conditions as below to get the contact you want to update:")
         print(" 1. Get contact by firstname,lastname,phone,company.")
         print(" 2. Back to main options.")
         print(" 3. Exit the app.")
@@ -230,7 +232,7 @@ class Main:
             choice = int(input("Please type the option number: "))
             if(choice < 1 or choice > 3):
                 self.try_again_with_invalid_input(
-                    self.get_contacts)
+                    self.update_contact)
             else:
                 if(choice == 1):
                     print("Please enter the condition.")
@@ -242,7 +244,103 @@ class Main:
                     company = input(
                         "Enter company (or just Press Enter):").strip()
                     contacts = self.get_contacts_by_conditions(
-                        Condition(first_name, last_name, phone, company))
+                        ContactObj(first_name, last_name, phone, company))
+                    length_contacts = len(contacts)
+                    if(length_contacts > 0):
+                        print("The search result:")
+                        self.print_contacts_with_seqno(contacts)
+                        print(
+                            "Enter the index number of contact you want update.")
+                        update_choice = input("Please enter:").strip()
+
+                        if(update_choice != ""):
+                            try:
+                                update_choice_seqno = int(update_choice)
+                                if(update_choice_seqno < 1 or update_choice_seqno > length_contacts):
+                                    self.try_again_with_invalid_input(
+                                        self.update_contact)
+                                else:
+                                    print("ready to update")
+                                    contact = contacts[update_choice_seqno-1]
+                                    print(
+                                        f"Original first name: {contact.first_name}")
+                                    update_first_name = input(
+                                        "Enter first name (* required): ")
+                                    print(
+                                        f"Original first name: {contact.last_name}")
+                                    update_last_name = input(
+                                        "Enter last name (* required): ")
+                                    print(
+                                        f"Original phone: {contact.phone}")
+                                    update_phone = input(
+                                        "Enter phone: ")
+                                    print(
+                                        f"Original first name: {contact.company}")
+                                    update_company = input(
+                                        "Enter company: ")
+                                    if(self.confirm_before_update()):
+                                        print("confirm to update")
+                                        self.update_contact_exec(contact.id, ContactObj(
+                                            update_first_name, update_last_name, update_phone, update_company))
+                                    '''
+                                    if(self.confirm_before_delete()):
+                                        contact = contacts[delete_choice_seqno-1]
+                                        self.delete_contacts([contact])
+                                    '''
+                            except ValueError as e:
+                                self.try_again_with_invalid_input(
+                                    self.update_contact)
+                    else:
+                        print("No result")
+                    self.back_to_main()
+
+                if(choice == 2):
+                    print("2")
+                    self.back_to_main()
+                if(choice == 3):
+                    print("Exit the app!")
+        except ValueError as e:
+            self.try_again_with_invalid_input(self.delete_contact)
+
+    def update_contact_exec(self, contact_id, update_contact):
+        print(contact_id)
+        Contact.update(first_name=update_contact.first_name, last_name=update_contact.last_name,
+                       phone=update_contact.phone, company=update_contact.company).where(Contact.id == contact_id).execute()
+        print("The following contact has been updated success. ")
+        updated_contact = Contact.get(Contact.id == contact_id)
+        self.print_detail_info(updated_contact)
+
+    def confirm_before_update(self):
+        update_confirm = input(
+            "Are you sure you want to update? y or n: ").strip()
+        if update_confirm.lower() == "y":
+            return True
+        else:
+            return False
+
+    def delete_contact(self):
+        print(
+            "Please choice the conditions as below to get the contacts you want to delete:")
+        print(" 1. Get contact by firstname,lastname,phone,company.")
+        print(" 2. Back to main options.")
+        print(" 3. Exit the app.")
+        try:
+            choice = int(input("Please type the option number: "))
+            if(choice < 1 or choice > 3):
+                self.try_again_with_invalid_input(
+                    self.delete_contact)
+            else:
+                if(choice == 1):
+                    print("Please enter the condition.")
+                    first_name = input(
+                        "Enter first name (or just Press Enter):").strip()
+                    last_name = input(
+                        "Enter last name (or just Press Enter):").strip()
+                    phone = input("Enter phone (or just Press Enter):").strip()
+                    company = input(
+                        "Enter company (or just Press Enter):").strip()
+                    contacts = self.get_contacts_by_conditions(
+                        ContactObj(first_name, last_name, phone, company))
                     length_contacts = len(contacts)
                     if(length_contacts > 0):
                         print("The search result:")
@@ -254,7 +352,7 @@ class Main:
                         if(delete_choice != ""):
                             if(delete_choice.lower() == "all"):
                                 if(self.confirm_before_delete()):
-                                    self.delete_contacts(contacts)
+                                    self.delete_contacts_exec(contacts)
                             else:
                                 try:
                                     delete_choice_seqno = int(delete_choice)
@@ -264,7 +362,8 @@ class Main:
                                     else:
                                         if(self.confirm_before_delete()):
                                             contact = contacts[delete_choice_seqno-1]
-                                            self.delete_contacts([contact])
+                                            self.delete_contacts_exec(
+                                                [contact])
                                 except ValueError as e:
                                     self.try_again_with_invalid_input(
                                         self.delete_contact)
@@ -280,7 +379,7 @@ class Main:
         except ValueError as e:
             self.try_again_with_invalid_input(self.delete_contact)
 
-    def delete_contacts(self, contacts):
+    def delete_contacts_exec(self, contacts):
         contacts_id_list = []
         for contact in contacts:
             contacts_id_list.append(contact.id)
