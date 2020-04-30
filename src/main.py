@@ -1,5 +1,6 @@
 from peewee import *
 from datetime import date
+import re
 
 db = PostgresqlDatabase('contacts', user='postgres', password='',
                         host='localhost', port=5432)
@@ -81,13 +82,14 @@ class Main:
                 self.try_again_with_invalid_input(self.run)
             else:
                 if(choice == 1):
-                    print("1")
+                    print("get_all_contacts")
                     self.get_all_contacts()
                 if(choice == 2):
-                    print("2")
+                    print("get_contacts")
                     self.get_contacts()
                 if(choice == 3):
-                    print("3")
+                    print("create_contact")
+                    self.create_contact()
                 if(choice == 4):
                     print("4")
                 if(choice == 5):
@@ -112,7 +114,7 @@ class Main:
                 if(choice == 1):
                     if(len(all_contacts) > 0):
                         for contact in all_contacts:
-                            self.print_name_in_list(contact)
+                            self.print_fullname(contact)
                     else:
                         print("No result")
                     self.back_to_main()
@@ -168,6 +170,53 @@ class Main:
             condition.last_name) & Contact.phone.contains(condition.phone) & Contact.company.contains(condition.company))
         return contacts
 
+    def create_contact(self):
+        back_to_main = False
+        print("Create a new contact\n")
+        first_name = input("Enter first name (* required):")
+        while(first_name.strip() == ""):
+            print(
+                "First name is required! If don't want to add a new contact, input back.")
+            first_name = input("Enter first name (* required):")
+            if(first_name.strip() != "" and first_name.strip().lower() == "back"):
+                back_to_main = True
+                break
+        if(back_to_main):
+            self.run()
+        else:
+            last_name = input("Enter last name (* required):")
+            while(last_name.strip() == ""):
+                print(
+                    "Last name is required! If don't want to add a new contact, input back.")
+                last_name = input("Enter last name (* required):")
+                if(last_name.strip() != "" and last_name.strip().lower() == "back"):
+                    back_to_main = True
+                    break
+            if(back_to_main):
+                self.run()
+            else:
+                phone = input(
+                    "Enter phone (nine digits and first one is no-zero, or just Press Enter):")
+                if(phone.strip() != ""):
+                    while(not self.validate_phone_number(phone)):
+                        print(
+                            "The number is invalid! If don't want to add a new contact, input back.")
+                        phone = input(
+                            "Enter phone (nine digits and first one is no-zero, or just Press Enter):")
+                        if(phone.strip() != "" and phone.strip().lower() == "back"):
+                            back_to_main = True
+                            break
+                if(back_to_main):
+                    self.run()
+                else:
+                    company = input("Enter company (or just Press Enter):")
+                    contact = Contact(first_name=first_name,
+                                      last_name=last_name, phone=phone, company=company)
+                    contact.save()
+                    print("\nNew contact has been created!\n")
+                    self.print_detail_info(contact)
+                    self.back_to_main()
+
     def try_again_with_invalid_input(self, func):
         input('Invalid input, Press Enter try again.')
         print()
@@ -181,14 +230,29 @@ class Main:
     def print_contacts(self, contacts):
         print("     Name            Phone           Company")
         for contact in contacts:
-            self.print_detail_in_list(contact)
+            self.print_detail_info_in_list(contact)
 
-    def print_name_in_list(self, contact):
+    def print_fullname(self, contact):
         print(f"    {contact.first_name} {contact.last_name}")
 
-    def print_detail_in_list(self, contact):
+    def print_detail_info_in_list(self, contact):
         print(
             f"  {contact.first_name} {contact.last_name}        {contact.phone}         {contact.company}")
+
+    def print_detail_info(self, contact):
+        print(f"    First name: {contact.first_name}")
+        print(f"    Last name: {contact.last_name}")
+        print(f"    Phone: {contact.phone}")
+        print(f"    Company: {contact.company}")
+
+    def validate_phone_number(self, phone_number):
+        if(len(phone_number) > 9):
+            print("The lenght of number exceeds nine.")
+            return False
+        ret = re.match(r"^[1-9]\d{8}$", phone_number)
+        if(not ret):
+            return False
+        return True
 
 
 contact_book = Main()
