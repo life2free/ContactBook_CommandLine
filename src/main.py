@@ -72,8 +72,8 @@ class Main:
         print(" 1. Get all contacts.")
         print(" 2. Get contacts by conditions.")
         print(" 3. Create a new contact.")
-        print(" 4. Update a contact.")
-        print(" 5. Delete a contact.")
+        print(" 4. Update contact.")
+        print(" 5. Delete contact.")
         print(" 6. Exit the app.")
         print()
         try:
@@ -93,7 +93,8 @@ class Main:
                 if(choice == 4):
                     print("4")
                 if(choice == 5):
-                    print("5")
+                    print("delete contact")
+                    self.delete_contact()
                 if(choice == 6):
                     print("Exit the app!")
         except ValueError as e:
@@ -139,16 +140,18 @@ class Main:
         print(" 3. Exit the app.")
         try:
             choice = int(input("Please type the option number: "))
-            if(choice < 1 or choice > 7):
+            if(choice < 1 or choice > 3):
                 self.try_again_with_invalid_input(
                     self.get_contacts)
             else:
                 if(choice == 1):
                     first_name = input(
-                        "Enter first name (or just Press Enter):")
-                    last_name = input("Enter last name (or just Press Enter):")
-                    phone = input("Enter phone (or just Press Enter):")
-                    company = input("Enter company (or just Press Enter):")
+                        "Enter first name (or just Press Enter):").strip()
+                    last_name = input(
+                        "Enter last name (or just Press Enter):").strip()
+                    phone = input("Enter phone (or just Press Enter):").strip()
+                    company = input(
+                        "Enter company (or just Press Enter):").strip()
                     contacts = self.get_contacts_by_conditions(
                         Condition(first_name, last_name, phone, company))
                     if(len(contacts) > 0):
@@ -217,6 +220,83 @@ class Main:
                     self.print_detail_info(contact)
                     self.back_to_main()
 
+    def delete_contact(self):
+        print(
+            "Please choice the conditions as below to get the contacts you want to delete:")
+        print(" 1. Get contact by firstname,lastname,phone,company.")
+        print(" 2. Back to main options.")
+        print(" 3. Exit the app.")
+        try:
+            choice = int(input("Please type the option number: "))
+            if(choice < 1 or choice > 3):
+                self.try_again_with_invalid_input(
+                    self.get_contacts)
+            else:
+                if(choice == 1):
+                    print("Please enter the condition.")
+                    first_name = input(
+                        "Enter first name (or just Press Enter):").strip()
+                    last_name = input(
+                        "Enter last name (or just Press Enter):").strip()
+                    phone = input("Enter phone (or just Press Enter):").strip()
+                    company = input(
+                        "Enter company (or just Press Enter):").strip()
+                    contacts = self.get_contacts_by_conditions(
+                        Condition(first_name, last_name, phone, company))
+                    length_contacts = len(contacts)
+                    if(length_contacts > 0):
+                        print("The search result:")
+                        self.print_contacts_with_seqno(contacts)
+                        print(
+                            "Enter the index number of contact you want delete or Enter all to delete all of the result.")
+                        delete_choice = input("Please enter:").strip()
+
+                        if(delete_choice != ""):
+                            if(delete_choice.lower() == "all"):
+                                if(self.confirm_before_delete()):
+                                    self.delete_contacts(contacts)
+                            else:
+                                try:
+                                    delete_choice_seqno = int(delete_choice)
+                                    if(delete_choice_seqno < 1 or delete_choice_seqno > length_contacts):
+                                        self.try_again_with_invalid_input(
+                                            self.delete_contact)
+                                    else:
+                                        if(self.confirm_before_delete()):
+                                            contact = contacts[delete_choice_seqno-1]
+                                            self.delete_contacts([contact])
+                                except ValueError as e:
+                                    self.try_again_with_invalid_input(
+                                        self.delete_contact)
+                    else:
+                        print("No result")
+                    self.back_to_main()
+
+                if(choice == 2):
+                    print("2")
+                    self.back_to_main()
+                if(choice == 3):
+                    print("Exit the app!")
+        except ValueError as e:
+            self.try_again_with_invalid_input(self.delete_contact)
+
+    def delete_contacts(self, contacts):
+        contacts_id_list = []
+        for contact in contacts:
+            contacts_id_list.append(contact.id)
+        print(contacts_id_list)
+        Contact.delete().where(Contact.id.in_(contacts_id_list)).execute()
+        print("The following contacts has been deleted success. ")
+        self.print_contacts(contacts)
+
+    def confirm_before_delete(self):
+        delete_confirm = input(
+            "Are you sure you want to delete? y or n: ").strip()
+        if delete_confirm.lower() == "y":
+            return True
+        else:
+            return False
+
     def try_again_with_invalid_input(self, func):
         input('Invalid input, Press Enter try again.')
         print()
@@ -232,12 +312,24 @@ class Main:
         for contact in contacts:
             self.print_detail_info_in_list(contact)
 
+    def print_contacts_with_seqno(self, contacts):
+        print("     Name            Phone           Company")
+        count = 0
+        for contact in contacts:
+            count += 1
+            self.print_detail_info_in_list_with_seqno(
+                contact, count)
+
     def print_fullname(self, contact):
         print(f"    {contact.first_name} {contact.last_name}")
 
     def print_detail_info_in_list(self, contact):
         print(
             f"  {contact.first_name} {contact.last_name}        {contact.phone}         {contact.company}")
+
+    def print_detail_info_in_list_with_seqno(self, contact, seqno):
+        print(
+            f"  {seqno}.  {contact.first_name} {contact.last_name}        {contact.phone}         {contact.company}")
 
     def print_detail_info(self, contact):
         print(f"    First name: {contact.first_name}")
