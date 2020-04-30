@@ -102,10 +102,13 @@ class Main:
                 all_contacts = Contact.select()
                 if(choice == 1):
                     for contact in all_contacts:
-                        print(f"    {contact.first_name} {contact.last_name}")
+                        self.print_name_in_list(contact)
                     self.back_to_main()
                 if(choice == 2):
-                    print("2")
+                    print("     Name            Phone           Company")
+                    for contact in all_contacts:
+                        self.print_detail_in_list(contact)
+                    self.back_to_main()
                 if(choice == 3):
                     print("3")
                     self.back_to_main()
@@ -123,6 +126,13 @@ class Main:
         input("Press Enter to back to main options.")
         print()
         self.run()
+
+    def print_name_in_list(self, contact):
+        print(f"    {contact.first_name} {contact.last_name}")
+
+    def print_detail_in_list(self, contact):
+        print(
+            f"  {contact.first_name} {contact.last_name}        {contact.phone}         {contact.company}")
 
 
 contact_book = Main()
