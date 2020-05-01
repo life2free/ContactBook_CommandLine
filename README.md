@@ -32,38 +32,38 @@ Here's the instuctions how to install and use it.
 
 ### Usage
 
-The usage show how to navigate through the application. In this application, user can view, create, update, delete the contact. In the application, there are some options for user to choice.
+The usage show how to navigate through the application. In this application, user can view, create, update, delete the contact. There are some options for user to choice.
 
 #### View Contact
 
 There are two options to get the contacts list to view the contact information.
 
-1. Get all of the contact
-   In this option, user can view all of contacts. There are two display option.
-   - Only list the firstname and lastname
+1. Get all of the contact  
+   Select this option, user can view all of contacts. There are two display option.
+   - Only list the firstname and lastname  
      Only display each contact's full name (consist of first_name and last_name)
-   - List all of the information
+   - List all of the information  
      Display all of information of each contact, including first_name, last_name, phone, company;
-2. Get contacts by conditions
-   In this option, user can type the first name, last name, phone number or company to search contacts. The application apply fuzzy search to search contacts from database.
+2. Get contacts by conditions  
+   Select this option, user can type the first name, last name, phone number or company to search contacts. The application apply fuzzy search to search contacts from database.
 
 #### Create Contact
 
-1. Create a new contact
-   In this option, user can create a new contact. When creating a new contact:
+1. Create a new contact  
+   Select this option, user can create a new contact. When creating a new contact:
    - The first name and last name are required
    - The phone number can be empty, or must be nine digits with first digit is non-zero
    - User can back to Main Menu by type 'back' before contact be created
 
 #### Update Contact
 
-1. Update a contact
-   In this option, user can update a existed contact. If want to update a existed contact, there are some step:
-   1. Get list of contacts by condition
+1. Update a contact  
+   Select this option, user can update a existed contact. If want to update a existed contact, there are some step:
+   1. Get list of contacts by condition  
       Type the conditions ( first name, last name, phone number or company ) to get list of contacts
-   2. Select a contact from search result
+   2. Select a contact from search result  
       Select a specific contact which is will be updated
-   3. Update the selected contact's information
+   3. Update the selected contact's information  
       Type the new information for the contact. When type new information for contact:
    - The new first name and new last name are required
    - The new phone number can be empty, or must be nine digits with first digit is non-zero
@@ -71,11 +71,11 @@ There are two options to get the contacts list to view the contact information.
 
 #### Delete Contact
 
-1. Delete contacts
-   In this option, user can update one existed contact or list of contacts. If want to delete contacts, there are some step:
-   1. Get list of contacts by condition
+1. Delete contacts  
+   Select this option, user can update one existed contact or list of contacts. If want to delete contacts, there are some step:
+   1. Get list of contacts by condition  
       Type the conditions ( first name, last name, phone number or company ) to get list of contacts
-   2. Select a contact or all of contacts from search result
+   2. Select a contact or all of contacts from search result  
       Select a specific contact or all of contacts from search result for deleting.
    3. Delete specific contact or list of contacts selected
 
