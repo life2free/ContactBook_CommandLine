@@ -40,10 +40,10 @@ There are two options to get the contacts list to view the contact information.
 
 1. Get all of the contact  
    Select this option, user can view all of contacts. There are two display option.
-   - Only list the firstname and lastname  
-     Only display each contact's full name (consist of first_name and last_name)
+   - Only list the first name and last name  
+     Only display each contact's full name (consist of first name and last name)
    - List all of the information  
-     Display all of information of each contact, including first_name, last_name, phone, company;
+     Display all of information of each contact, including first name, last name, phone, company;
 2. Get contacts by conditions  
    Select this option, user can type the first name, last name, phone number or company to search contacts. The application apply fuzzy search to search contacts from database.
 
