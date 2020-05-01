@@ -177,8 +177,8 @@ class Main:
     def create_contact(self):
         back_to_main = False
         print("Create a new contact\n")
-        first_name = input("Enter first name (* required):")
-        while(first_name.strip() == ""):
+        first_name = input("Enter first name (* required):").strip()
+        while(first_name == ""):
             print(
                 "First name is required! If don't want to add a new contact, input back.")
             first_name = input("Enter first name (* required):").strip()
@@ -260,33 +260,65 @@ class Main:
                                     self.try_again_with_invalid_input(
                                         self.update_contact)
                                 else:
+                                    back_to_main = False
                                     print("ready to update")
                                     contact = contacts[update_choice_seqno-1]
                                     print(
                                         f"Original first name: {contact.first_name}")
                                     update_first_name = input(
-                                        "Enter first name (* required): ")
-                                    print(
-                                        f"Original first name: {contact.last_name}")
-                                    update_last_name = input(
-                                        "Enter last name (* required): ")
-                                    print(
-                                        f"Original phone: {contact.phone}")
-                                    update_phone = input(
-                                        "Enter phone: ")
-                                    print(
-                                        f"Original first name: {contact.company}")
-                                    update_company = input(
-                                        "Enter company: ")
-                                    if(self.confirm_before_update()):
-                                        print("confirm to update")
-                                        self.update_contact_exec(contact.id, ContactObj(
-                                            update_first_name, update_last_name, update_phone, update_company))
-                                    '''
-                                    if(self.confirm_before_delete()):
-                                        contact = contacts[delete_choice_seqno-1]
-                                        self.delete_contacts([contact])
-                                    '''
+                                        "Enter first name (* required): ").strip()
+                                    while(update_first_name == ""):
+                                        print(
+                                            "First name is required! If don't want to update, input back.")
+                                        update_first_name = input(
+                                            "Enter first name (* required): ").strip()
+                                        if(update_first_name != "" and update_first_name.lower() == "back"):
+                                            back_to_main = True
+                                            break
+                                    if(not back_to_main):
+                                        print(
+                                            f"Original first name: {contact.last_name}")
+                                        update_last_name = input(
+                                            "Enter last name (* required): ").strip()
+                                        while(update_last_name == ""):
+                                            print(
+                                                "Last name is required! If don't want to update, input back.")
+                                            update_last_name = input(
+                                                "Enter last name (* required): ").strip()
+                                            if(update_last_name != "" and update_last_name.lower() == "back"):
+                                                back_to_main = True
+                                                break
+                                        if(not back_to_main):
+                                            print(
+                                                f"Original phone: {contact.phone}")
+                                            update_phone = input(
+                                                "Enter phone (nine digits and first one is no-zero, or just Press Enter): ")
+                                            if(update_phone != ""):
+                                                while(not self.validate_phone_number(update_phone)):
+                                                    print(
+                                                        "The number is invalid! If don't want to update, input back.")
+                                                    update_phone = input(
+                                                        "Enter phone (nine digits and first one is no-zero, or just Press Enter): ").strip()
+                                                    if(update_phone != "" and update_phone.lower() == "back"):
+                                                        back_to_main = True
+                                                        break
+                                                if(back_to_main):
+                                                    self.run()
+                                                else:
+                                                    print(
+                                                        f"Original company: {contact.company}")
+                                                    update_company = input(
+                                                        "Enter company: ")
+                                                    if(self.confirm_before_update_or_delete("update")):
+                                                        print(
+                                                            "confirm to update")
+                                                        self.update_contact_exec(contact.id, ContactObj(
+                                                            update_first_name, update_last_name, update_phone, update_company))
+                                                    '''
+                                                    if(self.confirm_before_delete()):
+                                                        contact = contacts[delete_choice_seqno-1]
+                                                        self.delete_contacts([contact])
+                                                    '''
                             except ValueError as e:
                                 self.try_again_with_invalid_input(
                                     self.update_contact)
@@ -309,14 +341,6 @@ class Main:
         print("The following contact has been updated success. ")
         updated_contact = Contact.get(Contact.id == contact_id)
         self.print_detail_info(updated_contact)
-
-    def confirm_before_update(self):
-        update_confirm = input(
-            "Are you sure you want to update? y or n: ").strip()
-        if update_confirm.lower() == "y":
-            return True
-        else:
-            return False
 
     def delete_contact(self):
         print(
@@ -351,7 +375,7 @@ class Main:
 
                         if(delete_choice != ""):
                             if(delete_choice.lower() == "all"):
-                                if(self.confirm_before_delete()):
+                                if(self.confirm_before_update_or_delete("delete")):
                                     self.delete_contacts_exec(contacts)
                             else:
                                 try:
@@ -360,7 +384,7 @@ class Main:
                                         self.try_again_with_invalid_input(
                                             self.delete_contact)
                                     else:
-                                        if(self.confirm_before_delete()):
+                                        if(self.confirm_before_update_or_delete("delete")):
                                             contact = contacts[delete_choice_seqno-1]
                                             self.delete_contacts_exec(
                                                 [contact])
@@ -388,16 +412,16 @@ class Main:
         print("The following contacts has been deleted success. ")
         self.print_contacts(contacts)
 
-    def confirm_before_delete(self):
-        delete_confirm = input(
-            "Are you sure you want to delete? y or n: ").strip()
-        if delete_confirm.lower() == "y":
+    def confirm_before_update_or_delete(self, update_or_delete):
+        confirm = input(
+            f"Are you sure you want to {update_or_delete}? y or n: ").strip()
+        if confirm.lower() == "y":
             return True
         else:
             return False
 
     def try_again_with_invalid_input(self, func):
-        input('Invalid input, Press Enter try again.')
+        input('Invalid input, Press Enter to try again.')
         print()
         func()
 
