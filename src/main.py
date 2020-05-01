@@ -128,7 +128,7 @@ class Main:
 
     # Create a new contact
     # The first name and last name are required
-    # The phone number can be empty, or must be nine digits with first digit is non-zero
+    # The phone number can be empty, or must be ten digits with first digit is non-zero
     # You can back to Main Menu by type 'back' before contact be created
     def create_contact(self):
         print()
@@ -151,13 +151,13 @@ class Main:
                 self.main()
             else:
                 phone = input(
-                    "Type phone (nine digits with first one is non-zero, or just Press Enter): ").strip()
+                    "Type phone (ten digits with first one is non-zero, or just Press Enter): ").strip()
 
                 while(phone != "" and phone.lower() != "back" and not self.validate_phone_number(phone)):
                     print(
                         "The number is invalid! If don't want to add a new contact, input 'back'.\n")
                     phone = input(
-                        "Type phone (nine digits with first one is non-zero, or just Press Enter): ").strip()
+                        "Type phone (ten digits with first one is non-zero, or just Press Enter): ").strip()
                 if(phone.lower() == "back"):
                     self.main()
                 else:
@@ -179,7 +179,7 @@ class Main:
     #       3. Update the selected contact's information
     # When type new information for contact:
     #   The new first name and new last name are required
-    #   The new phone number can be empty, or must be nine digits with first digit is non-zero
+    #   The new phone number can be empty, or must be ten digits with first digit is non-zero
     #   User can back to Main Menu by type 'back' when typing new information
     def update_contact(self):
         print()
@@ -256,13 +256,13 @@ class Main:
                                         f"\nOriginal phone number: {contact.phone}")
                                     # type new phone number
                                     update_phone = input(
-                                        "Type new phone number (nine digits with first one is non-zero, or just Press Enter): ")
+                                        "Type new phone number (ten digits with first one is non-zero, or just Press Enter): ")
 
                                     while(update_phone != "" and update_phone.lower() != "back" and not self.validate_phone_number(update_phone)):
                                         print(
                                             "The number is invalid! If don't want to update, input 'back'.")
                                         update_phone = input(
-                                            "Type new phone number (nine digits with first one is non-zero, or just Press Enter): ").strip()
+                                            "Type new phone number (ten digits with first one is non-zero, or just Press Enter): ").strip()
                                     if(update_phone.lower() == "back"):
                                         self.main()
                                     else:
@@ -444,12 +444,12 @@ class Main:
         return option
 
     # Validate the phone number
-    # the valiable phone number: 9 digits, the first digit is not zero
+    # the valiable phone number: ten digits, the first digit is not zero
     def validate_phone_number(self, phone_number):
-        if(len(phone_number) > 9):
-            print("The lenght of number exceeds nine.")
+        if(len(phone_number) > 10):
+            print("The lenght of number exceeds ten.")
             return False
-        ret = re.match(r"^[1-9]\d{8}$", phone_number)
+        ret = re.match(r"^[1-9]\d{9}$", phone_number)
         if(not ret):
             return False
         return True

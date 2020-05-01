@@ -52,7 +52,7 @@ There are two options to get the contacts list to view the contact information.
 1. Create a new contact  
    Select this option, user can create a new contact. When creating a new contact:
    - The first name and last name are required
-   - The phone number can be empty, or must be nine digits with first digit is non-zero
+   - The phone number can be empty, or must be ten digits with first digit is non-zero
    - User can back to Main Menu by type 'back' before contact be created
 
 #### Update Contact
@@ -66,7 +66,7 @@ There are two options to get the contacts list to view the contact information.
    3. Update the selected contact's information  
       Type the new information for the contact. When type new information for contact:
    - The new first name and new last name are required
-   - The new phone number can be empty, or must be nine digits with first digit is non-zero
+   - The new phone number can be empty, or must be ten digits with first digit is non-zero
    - User can back to Main Menu by type 'back' when typing new information
 
 #### Delete Contact

@@ -24,27 +24,19 @@ def initialize_db():
     db.create_tables([Contact])
 
     # insert some data
-    justin = Contact(first_name='Justin', last_name='Ber',
+    justin = Contact(first_name='Justin', last_name='Boet',
                      phone='1234567890', company='Capital one')
     justin.save()
-    chris = Contact(first_name='Chris', last_name='Evans',
-                    phone='5516785403', company='Microsoft')
+    chris = Contact(first_name='Chris', last_name='Eooo',
+                    phone='5000000000', company='Microsoft')
     chris.save()
-    stan = Contact(first_name='Stan', last_name='Lee',
-                   phone='7680735403', company='Marvel Comic')
+    stan = Contact(first_name='St', last_name='Leaaa',
+                   phone='9680000000', company='Marvel Comic')
     stan.save()
-    hattie = Contact(first_name='Hattie', last_name='Mora',
-                     phone='7680735403', company='Facebook')
+    hattie = Contact(first_name='Haie', last_name='Mosss',
+                     phone='3000000003', company='Facebook')
     hattie.save()
 
-    roger = Contact(first_name='Roger', last_name='Campbell',
-                    phone='7000302403', company='General Assembly')
-    roger.save()
-
-    noah = Contact(first_name='Noah', last_name='Clark',
-                   phone='7000380755', company='General Assembly')
-    noah.save()
-
-    shimin = Contact(first_name='Shimin', last_name='Rao',
-                     phone='7623735403', company='General Assembly')
+    shimin = Contact(first_name='Sin', last_name='Ro',
+                     phone='7000000000', company='General Assembly')
     shimin.save()
