@@ -83,6 +83,10 @@ There are two options to get the contacts list to view the contact information.
 
 User can exit the applicaton when choicing this option.
 
+## Screenshots
+
+[Contact Book]()
+
 ## Contribute
 
 - Source code: https://github.com/life2free/ContactBook_CommandLine
