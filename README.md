@@ -85,7 +85,7 @@ User can exit the applicaton when choicing this option.
 
 ## Screenshots
 
-[Contact Book]()
+![Contact Book](https://life2free.github.io/ContactBook_CommandLine/Contact_ScreenShot.png)
 
 ## Contribute
 
