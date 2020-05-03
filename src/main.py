@@ -417,7 +417,7 @@ class Main:
 
     # Only print the contact's full name (consist of first_name and last_name)
     def print_fullname_in_list(self, contact, seqno):
-        print(f"  {seqno}.  {contact.first_name} {contact.last_name}")
+        print(f"  {seqno}  {contact.first_name} {contact.last_name}")
 
     # Print the detail information in one row, used when printing list of contacts
     def print_detail_info_in_list(self, contact, seqno):
