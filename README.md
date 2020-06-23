@@ -1,6 +1,6 @@
 # Contact Book
 
-A Contact Book builded with Python and SQL.
+A command line application which users are able to search, view, create, update and delete contacts.
 
 ## Description:
 
